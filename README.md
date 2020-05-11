@@ -1,1 +1,1 @@
-# sync-icons-from-figma-action
+# Sync icons from figma

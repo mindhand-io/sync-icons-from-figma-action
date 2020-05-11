@@ -1,0 +1,13 @@
+name: 'Get icons from Figma'
+description: 'Get icons from Figma'
+author: 'Mindhand'
+inputs:
+  figma_file_key:
+    description: 'The key of the Figma file where the icon is located'
+  frame_with_icons_id:
+    description: 'The id of the frame where the icon is located'
+  svg_folder_path:
+    description: 'path to store svg'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
