@@ -1,0 +1,1 @@
+# sync-icons-from-figma-action
