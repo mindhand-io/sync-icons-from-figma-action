@@ -28,7 +28,7 @@
     "axios": "^0.19.2"
   },
   "devDependencies": {
-    "@types/jest": "24.9.1",
+    "@types/jest": "25.2.1",
     "@types/node": "12.12.38",
     "jest": "24.9.0",
     "jest-circus": "24.9.0",
