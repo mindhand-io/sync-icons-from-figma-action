@@ -35,36 +35,42 @@ async function run() {
       await io.mkdirP(SVG_PATH);
     }
 
-    const { added, deleted, modified } = compareDir(SVG_PATH, TEMP_SVG_PATH);
-    if (deleted.length) {
-      core.warning(`[BREAKING CHANGE] ${deleted.join(", ")} deleted`);
-      deleteFiles(deleted, SVG_PATH);
-      await commit(
-        `delete(icons)!: deleted ${deleted.join(", ")}
+    const diffFiles = compareDir(SVG_PATH, TEMP_SVG_PATH);
 
-BREAKING CHANGE: ${deleted.join(", ")} was deleted!`,
-        deleted.map((item) => path.join(SVG_FOLDER, item))
-      );
-    }
+    await io.rmRF(SVG_PATH);
+    fs.renameSync(TEMP_SVG_PATH, SVG_PATH);
 
-    if (added.length || modified.length) {
-      await io.mv(TEMP_SVG_PATH, SVG_PATH);
-      await io.rmRF(TEMP_SVG_PATH);
-      if (added.length) {
-        core.info(`add ${added.join(", ")}`);
+    type FileType = keyof typeof diffFiles;
+
+    const commitFilesByType = async (type: FileType) => {
+      const breakingTypes = ["deleted"];
+      const breaking = breakingTypes.includes(type);
+
+      const files = diffFiles[type];
+      const commitTypes = {
+        added: "new",
+        modified: "update",
+        deleted: "delete",
+      };
+      if (files.length) {
+        core.info(`${type} ${files.join(", ")}`);
+        const breakingMessage = breaking
+          ? `\n\nBREAKING CHANGE: ${files.join(", ")} was ${type}!`
+          : "";
+
         await commit(
-          `new(icons): add ${added.join(", ")}`,
-          added.map((item) => path.join(SVG_FOLDER, item))
+          `${commitTypes[type]}(icons)${
+            breaking ? "!" : ""
+          }: ${type} ${files.join(", ")}${breakingMessage}`,
+          files.map((item) => path.join(SVG_FOLDER, item))
         );
       }
-      if (modified.length) {
-        core.info(`update ${modified.join(", ")}`);
-        await commit(
-          `update(icons): update ${modified.join(", ")}`,
-          modified.map((item) => path.resolve(SVG_FOLDER, item))
-        );
-      }
-    }
+    };
+
+    await Promise.all(
+      (Object.keys(diffFiles) as FileType[]).map(commitFilesByType)
+    );
+
     await push();
   } catch (error) {
     core.setFailed(error.message);
