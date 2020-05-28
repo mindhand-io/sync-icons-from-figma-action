@@ -29,6 +29,7 @@ async function run() {
     const svgUrls = await getFigmaSvgUrls(figmaFileKey, frameWithIconsId);
 
     core.info(`Start downloading...`);
+    await io.mkdirP(TEMP_SVG_PATH);
     await downloadAllSvgs(svgUrls);
 
     await setUpGit();
