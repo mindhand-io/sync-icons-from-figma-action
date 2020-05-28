@@ -41,10 +41,7 @@ async function run() {
     const { added, deleted, modified } = compareDir(SVG_PATH, TEMP_SVG_PATH);
     if (deleted.length) {
       core.warning(`[BREAKING CHANGE] ${deleted.join(", ")} deleted`);
-      deleteFiles(
-        deleted.map((item) => (item.name1 || item.name2)!),
-        SVG_PATH
-      );
+      deleteFiles(deleted, SVG_PATH);
       await commit(`delete(icons)!: deleted ${deleted.join(", ")}
 
 BREAKING CHANGE: ${deleted.join(", ")} was deleted!
@@ -55,21 +52,17 @@ BREAKING CHANGE: ${deleted.join(", ")} was deleted!
       await io.mv(TEMP_SVG_PATH, SVG_PATH);
       await io.rmRF(TEMP_SVG_PATH);
       if (added.length) {
-        core.info(`add ${added.join(", ")}`)
+        core.info(`add ${added.join(", ")}`);
         await commit(
           `new(icons): add ${added.join(", ")}`,
-          added.map((item) =>
-            path.resolve(SVG_PATH, (item.name1 || item.name2)!)
-          )
+          added.map((item) => path.resolve(SVG_PATH, item))
         );
       }
       if (modified.length) {
-        core.info(`update ${modified.join(", ")}`)
+        core.info(`update ${modified.join(", ")}`);
         await commit(
           `update(icons): update ${modified.join(", ")}`,
-          modified.map((item) =>
-            path.resolve(SVG_PATH, (item.name1 || item.name2)!)
-          )
+          modified.map((item) => path.resolve(SVG_PATH, item))
         );
       }
     }

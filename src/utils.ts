@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import axios from "axios";
-import { compareSync, Difference, Options } from "dir-compare";
+import { compareSync, Options } from "dir-compare";
 
 interface DownloadFileParams {
   name: string;
@@ -32,23 +32,24 @@ const compareOptions: Options = {
 };
 
 export function compareDir(oldPath: string, newPath: string) {
-  const added: Difference[] = [];
-  const deleted: Difference[] = [];
-  const modified: Difference[] = [];
+  const added: string[] = [];
+  const deleted: string[] = [];
+  const modified: string[] = [];
   const result = compareSync(oldPath, newPath, compareOptions);
   if (!result.same) {
     result.diffSet
       ?.filter((item) => (item.name1 || item.name2)?.split(".").pop() === "svg")
       .forEach((diff) => {
+        const filename: string = (diff.name1 || diff.name2)!;
         switch (diff.state) {
           case "distinct":
-            modified.push(diff);
+            modified.push(filename);
             break;
           case "left":
-            deleted.push(diff);
+            deleted.push(filename);
             break;
           case "right":
-            added.push(diff);
+            added.push(filename);
             break;
         }
       });
@@ -59,7 +60,6 @@ export function compareDir(oldPath: string, newPath: string) {
     modified,
   };
 }
-
 
 export function deleteFiles(files: string[], folderPath: string) {
   files.forEach((item) => fs.unlinkSync(path.join(folderPath, item)));
