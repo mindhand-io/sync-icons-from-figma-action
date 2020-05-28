@@ -1,4 +1,4 @@
-const axios = require("axios");
+import axios from "axios";
 
 const requestHeaders = {
   "X-FIGMA-TOKEN": process.env.FIGMA_TOKEN
