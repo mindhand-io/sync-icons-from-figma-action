@@ -44,8 +44,7 @@ async function run() {
       deleteFiles(deleted, SVG_PATH);
       await commit(`delete(icons)!: deleted ${deleted.join(", ")}
 
-BREAKING CHANGE: ${deleted.join(", ")} was deleted!
-      `);
+BREAKING CHANGE: ${deleted.join(", ")} was deleted!`);
     }
 
     if (added.length || modified.length) {
@@ -108,7 +107,7 @@ const setUpGit = async () => {
 const commit = async (message: string, files?: string[]) => {
   const addArg = files?.length ? files.join(" ") : "-A";
   await exec(`git add ${addArg}`);
-  await exec(`git commit -m '${message}'`);
+  await exec(`git commit -m "${message}"`);
 };
 
 const push = () => exec("git push -u origin HEAD");
