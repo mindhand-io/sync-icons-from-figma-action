@@ -14,11 +14,8 @@ const TEMP_SVG_PATH = path.resolve(
   process.env.GITHUB_WORKSPACE!,
   "__SVG__TEMP__FOLDER__"
 );
-
-const SVG_PATH = path.resolve(
-  process.env.GITHUB_WORKSPACE!,
-  core.getInput("svg_folder_path") || "svg"
-);
+const SVG_FOLDER = core.getInput("svg_folder_path") || "svg";
+const SVG_PATH = path.resolve(process.env.GITHUB_WORKSPACE!, SVG_FOLDER);
 
 async function run() {
   try {
@@ -42,9 +39,12 @@ async function run() {
     if (deleted.length) {
       core.warning(`[BREAKING CHANGE] ${deleted.join(", ")} deleted`);
       deleteFiles(deleted, SVG_PATH);
-      await commit(`delete(icons)!: deleted ${deleted.join(", ")}
+      await commit(
+        `delete(icons)!: deleted ${deleted.join(", ")}
 
-BREAKING CHANGE: ${deleted.join(", ")} was deleted!`);
+BREAKING CHANGE: ${deleted.join(", ")} was deleted!`,
+        deleted.map((item) => path.join(SVG_FOLDER, item))
+      );
     }
 
     if (added.length || modified.length) {
@@ -54,14 +54,14 @@ BREAKING CHANGE: ${deleted.join(", ")} was deleted!`);
         core.info(`add ${added.join(", ")}`);
         await commit(
           `new(icons): add ${added.join(", ")}`,
-          added.map((item) => path.resolve(SVG_PATH, item))
+          added.map((item) => path.join(SVG_FOLDER, item))
         );
       }
       if (modified.length) {
         core.info(`update ${modified.join(", ")}`);
         await commit(
           `update(icons): update ${modified.join(", ")}`,
-          modified.map((item) => path.resolve(SVG_PATH, item))
+          modified.map((item) => path.resolve(SVG_FOLDER, item))
         );
       }
     }
