@@ -67,9 +67,9 @@ async function run() {
       }
     };
 
-    await Promise.all(
-      (Object.keys(diffFiles) as FileType[]).map(commitFilesByType)
-    );
+    for (const key in diffFiles) {
+      await commitFilesByType(key as FileType);
+    }
 
     await push();
   } catch (error) {
