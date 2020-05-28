@@ -1,14 +1,13 @@
-import { compareDir, deleteFiles } from "./utils";
+import * as fs from "fs";
+import * as path from "path";
 
 import * as core from "@actions/core";
 import * as io from "@actions/io";
 import { exec } from "@actions/exec";
 
-import * as fs from "fs";
-import * as path from "path";
+import { getNode, getSvgs } from "./figmaAPI";
+import { compareDir, download } from "./utils";
 
-const { getNode, getSvgs } = require("./figmaAPI");
-const { download } = require("./utils");
 
 const TEMP_SVG_PATH = path.resolve(
   process.env.GITHUB_WORKSPACE!,

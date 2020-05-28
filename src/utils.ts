@@ -60,7 +60,3 @@ export function compareDir(oldPath: string, newPath: string) {
     modified,
   };
 }
-
-export function deleteFiles(files: string[], folderPath: string) {
-  files.forEach((item) => fs.unlinkSync(path.join(folderPath, item)));
-}
