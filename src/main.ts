@@ -1,11 +1,11 @@
 import { compareDir, deleteFiles } from "./utils";
 
-import core from "@actions/core";
-import io from "@actions/io";
+import * as core from "@actions/core";
+import * as io from "@actions/io";
 import { exec } from "@actions/exec";
 
-import fs from "fs";
-import path from "path";
+import * as fs from "fs";
+import * as path from "path";
 
 const { getNode, getSvgs } = require("./figmaAPI");
 const { download } = require("./utils");
