@@ -60,7 +60,7 @@ async function run() {
         await commit(
           `${commitTypes[type]}(icons)${
             breaking ? "!" : ""
-          }: ${type} ${files.join(", ")}${breakingMessage}`,
+          }: ${type} ${files.join(", ")}${breakingMessage} [skip ci]`,
           files.map((item) => path.join(SVG_FOLDER, item))
         );
       }
