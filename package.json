@@ -29,7 +29,7 @@
     "dir-compare": "^2.3.0"
   },
   "devDependencies": {
-    "@types/jest": "25.2.3",
+    "@types/jest": "27.0.3",
     "@types/node": "12.12.44",
     "jest": "26.0.1",
     "jest-circus": "26.0.1",
